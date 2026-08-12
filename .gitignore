@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .venv/
 __pycache__/
 *.py[cod]
@@ -5,3 +6,13 @@ __pycache__/
 config.yaml
 shot.png
 .cache/
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
+=======
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
+>>>>>>> origin/main
