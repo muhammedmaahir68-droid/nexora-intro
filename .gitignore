@@ -1,3 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+config.yaml
+shot.png
+.cache/
 .DS_Store
 Thumbs.db
 node_modules/
