@@ -1,469 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-<title>NEXORA — IT Club Interactive Intro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#000000;
-    --blue:#4fb6ff;
-    --blue-dim:#1e5c8a;
-    --violet:#a855f7;
-    --violet-dim:#5b2f8a;
-    --chrome:#e8ebf0;
-    --chrome-dim:#8b93a3;
-  }
-  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body{
-    margin:0; padding:0; width:100%; height:100%;
-    background:var(--bg); overflow:hidden;
-    font-family:'Rajdhani',sans-serif;
-    touch-action:none; user-select:none;
-    cursor:none;
-  }
-  #stage{ position:fixed; inset:0; }
-  canvas{ position:absolute; inset:0; display:block; }
-  #ring{ position:absolute; inset:0; z-index:3; }
-
-  #logoWrap{
-    position:absolute; left:50%; top:50%;
-    transform:translate(-50%,-50%);
-    width:min(46vw,46vh); height:min(46vw,46vh);
-    z-index:4; pointer-events:none;
-  }
-  #logoImg{
-    width:100%; height:100%; object-fit:contain;
-    filter:drop-shadow(0 0 0px rgba(120,170,255,0));
-    clip-path: circle(0% at 50% 50%);
-    opacity:0;
-  }
-
-  #hint{
-    position:absolute; left:50%; bottom:9%;
-    transform:translateX(-50%);
-    z-index:5; text-align:center;
-    font-family:'Orbitron', sans-serif;
-    font-weight:600; letter-spacing:.35em;
-    font-size:clamp(14px,1.6vw,20px);
-    color:var(--chrome-dim);
-    opacity:0; transition:opacity .8s ease;
-    pointer-events:none;
-  }
-  #hint .dot{
-    display:inline-block; width:8px; height:8px; border-radius:50%;
-    background:var(--blue); margin:0 10px; vertical-align:middle;
-    animation:pulseDot 1.6s ease-in-out infinite;
-  }
-  @keyframes pulseDot{
-    0%,100%{ opacity:.35; transform:scale(1); }
-    50%{ opacity:1; transform:scale(1.4); }
-  }
-
-  #brandLine{
-    position:absolute; left:50%; top:7%;
-    transform:translateX(-50%);
-    z-index:5; font-family:'Orbitron',sans-serif;
-    font-weight:500; letter-spacing:.5em;
-    font-size:clamp(11px,1.1vw,14px);
-    color:var(--chrome-dim); opacity:0;
-    pointer-events:none;
-  }
-
-  #cursorGlow{
-    position:fixed; width:26px; height:26px; border-radius:50%;
-    background:radial-gradient(circle, rgba(120,180,255,.9), rgba(168,85,247,.15) 60%, transparent 70%);
-    transform:translate(-50%,-50%);
-    pointer-events:none; z-index:6; opacity:0; filter:blur(1px);
-    transition:opacity .3s ease;
-  }
-
-  #startOverlay{
-    position:absolute; inset:0; z-index:10;
-    display:flex; align-items:center; justify-content:center;
-    background:transparent;
-  }
-
-  #muteBtn{
-    position:absolute; top:5%; right:4%; z-index:20;
-    width:46px; height:46px; border-radius:50%;
-    border:1px solid rgba(139,147,163,.4);
-    background:rgba(255,255,255,.03);
-    color:var(--chrome-dim); font-size:18px;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Rajdhani'; pointer-events:auto;
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080608">
+  <meta name="description" content="NEXORA Club Inauguration — an immersive scroll experience.">
+  <title>NEXORA — Club Inauguration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
-<div id="stage">
-  <canvas id="particles"></canvas>
-  <svg id="ring" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"></svg>
+  <header class="nav">
+    <a class="wordmark" href="#home" aria-label="Nexora home">NEXORA<span>°</span></a>
+    <p>THE CLUB / 2026</p>
+    <div class="nav-controls">
+      <button class="voice-trigger" id="voiceTrigger"><span>●</span> VOICE MEMO</button>
+      <button class="gesture-trigger" id="gestureTrigger"><span class="hand-mark">✦</span> ENABLE GESTURES</button>
+    </div>
+  </header>
 
-  <div id="brandLine">NEXORA&nbsp;&nbsp;IT&nbsp;CLUB</div>
+  <main id="home">
+    <section class="hero scene active" data-scene="0">
+      <div class="hero-copy reveal">
+        <p class="kicker">ONE NIGHT ONLY · THE OFFICIAL OPENING</p>
+        <h1>Enter the<br><em>unseen.</em></h1>
+        <p class="intro">A new after-dark chapter begins. Move through the night, one feeling at a time.</p>
+        <a href="#chapter-one" class="enter-link">Begin the experience <i>↓</i></a>
+      </div>
+      <div class="hero-logo reveal">
+        <div class="logo-frame">
+          <img src="./nexora-logo.jpg" alt="Nexora logo">
+        </div>
+        <span>THE MARK OF THE NIGHT</span>
+      </div>
+      <div class="hero-index">01 <span>/ 04</span></div>
+      <p class="scroll-note">SCROLL TO UNFOLD <span></span></p>
+    </section>
 
-  <div id="logoWrap">
-    <img id="logoImg" src="nexora-logo.jpg" alt="NEXORA logo" />
+    <section class="chapter scene" id="chapter-one" data-scene="1">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-arrival.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 01 / ARRIVAL</p>
+        <h2>The doors<br>are <em>open.</em></h2>
+        <p>Follow the pulse. Leave the ordinary at the threshold.</p>
+      </div>
+      <p class="chapter-number">01</p>
+    </section>
+
+    <section class="chapter chapter-reverse scene" id="chapter-two" data-scene="2">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-energy.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 02 / IGNITION</p>
+        <h2>Let the<br>room <em>move you.</em></h2>
+        <p>Lights lower. Energy rises. This is where the story turns electric.</p>
+      </div>
+      <p class="chapter-number">02</p>
+    </section>
+
+    <section class="chapter scene" id="chapter-three" data-scene="3">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-final.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 03 / THE MOMENT</p>
+        <h2>This is<br>the <em>beginning.</em></h2>
+        <p>Not just a launch. A new place to return to, long after tonight.</p>
+      </div>
+      <p class="chapter-number">03</p>
+    </section>
+
+    <section class="closing scene" id="rsvp" data-scene="4">
+      <p class="kicker reveal">NEXORA CLUB INAUGURATION</p>
+      <h2 class="reveal">See you<br>on the <em>inside.</em></h2>
+      <div class="event-details reveal">
+        <p><b>THE OPENING NIGHT</b><br>AN INVITATION TO BEGIN</p>
+        <a href="mailto:hello@nexora.club?subject=Nexora%20Club%20Inauguration">REQUEST YOUR INVITATION <i>↗</i></a>
+      </div>
+      <p class="closing-mark">NEXORA<span>°</span></p>
+    </section>
+  </main>
+
+  <div class="scene-nav" aria-label="Experience navigation">
+    <button class="is-current" data-go="0" aria-label="Opening"></button>
+    <button data-go="1" aria-label="Arrival"></button>
+    <button data-go="2" aria-label="Ignition"></button>
+    <button data-go="3" aria-label="The moment"></button>
+    <button data-go="4" aria-label="Invitation"></button>
   </div>
 
-  <div id="hint"><span class="dot"></span>TOUCH ANYWHERE TO BEGIN<span class="dot"></span></div>
+  <div class="gesture-panel" id="gesturePanel" aria-hidden="true">
+    <div class="camera-box"><video id="gestureVideo" playsinline muted></video><canvas id="gestureCanvas"></canvas></div>
+    <div><b>GESTURE CONTROL ACTIVE</b><p>Swipe your open hand left or right to move through the night.</p></div>
+    <button id="gestureClose" aria-label="Close gesture controls">×</button>
+  </div>
+  <div class="voice-panel" id="voicePanel" role="status" aria-live="polite">
+    <span class="voice-wave"><i></i><i></i><i></i><i></i><i></i></span>
+    <div><b id="voiceState">VOICE COMMAND READY</b><p id="voiceText">Say “next”, “back”, “start”, or “invitation”.</p></div>
+  </div>
 
-  <div id="cursorGlow"></div>
-  <button id="muteBtn" aria-label="toggle sound">♪</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-<script>
-/* ================= AUDIO ================= */
-let audioReady = false;
-let muted = false;
-let ambientLoop = null;
-
-function initAudio(){
-  if(audioReady) return;
-  audioReady = true;
-
-  const reverb = new Tone.Reverb({decay:4, wet:0.35}).toDestination();
-  const master = new Tone.Gain(0.8).connect(reverb);
-
-  window.synths = {
-    whoosh: new Tone.NoiseSynth({
-      noise:{type:'white'},
-      envelope:{attack:0.6, decay:0.8, sustain:0, release:0.6}
-    }).connect(master),
-    swell: new Tone.PolySynth(Tone.FMSynth,{
-      harmonicity:1.5, modulationIndex:2,
-      envelope:{attack:1.2, decay:0.6, sustain:0.4, release:2.2}
-    }).connect(master),
-    chime: new Tone.PolySynth(Tone.Synth,{
-      oscillator:{type:'sine'},
-      envelope:{attack:0.01, decay:0.5, sustain:0.1, release:1.2}
-    }).connect(master),
-    thump: new Tone.MembraneSynth({
-      pitchDecay:0.05, octaves:4,
-      envelope:{attack:0.001, decay:0.5, sustain:0, release:0.4}
-    }).connect(master),
-    tick: new Tone.MetalSynth({
-      frequency:400, envelope:{attack:0.001, decay:0.15, release:0.05},
-      harmonicity:5.1, modulationIndex:16, resonance:2000, octaves:0.8
-    }).connect(new Tone.Gain(0.15).connect(master))
-  };
-  window.masterGain = master;
-}
-
-function setMuted(v){
-  muted = v;
-  if(window.masterGain) window.masterGain.gain.rampTo(v?0:0.8, 0.3);
-  document.getElementById('muteBtn').textContent = v ? '×' : '♪';
-}
-
-document.getElementById('muteBtn').addEventListener('pointerdown', e=>{
-  e.stopPropagation();
-  setMuted(!muted);
-});
-
-/* ================= CANVAS PARTICLES ================= */
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let W,H,DPR;
-function resize(){
-  DPR = Math.min(window.devicePixelRatio||1, 2);
-  W = canvas.width = innerWidth*DPR;
-  H = canvas.height = innerHeight*DPR;
-  canvas.style.width = innerWidth+'px';
-  canvas.style.height = innerHeight+'px';
-}
-resize();
-window.addEventListener('resize', resize);
-
-function cx(){ return W/2; }
-function cy(){ return H/2; }
-
-const COLORS = ['#4fb6ff','#7c9bff','#a855f7','#c084fc','#e8ebf0'];
-
-class Particle{
-  constructor(){ this.reset(); }
-  reset(){
-    const edge = Math.random();
-    if(edge<0.25){ this.x=Math.random()*W; this.y=-10; }
-    else if(edge<0.5){ this.x=W+10; this.y=Math.random()*H; }
-    else if(edge<0.75){ this.x=Math.random()*W; this.y=H+10; }
-    else { this.x=-10; this.y=Math.random()*H; }
-    this.baseX = this.x; this.baseY = this.y;
-    this.vx=0; this.vy=0;
-    this.r = (Math.random()*2+0.8)*DPR;
-    this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-    this.alpha = Math.random()*0.5+0.3;
-    this.driftX = (Math.random()-0.5)*0.15;
-    this.driftY = (Math.random()-0.5)*0.15;
-    this.phase = Math.random()*Math.PI*2;
-    this.mode = 'idle'; // idle | attract | orbit
-  }
-}
-
-const PARTICLE_COUNT = 220;
-let particles = Array.from({length:PARTICLE_COUNT}, ()=>new Particle());
-
-let pointer = {x:null, y:null, active:false};
-let target = {x:cx(), y:cy()};
-let attractStrength = 0;
-let orbitPhase = 0;
-let t = 0;
-
-function drawParticles(){
-  ctx.clearRect(0,0,W,H);
-  for(const p of particles){
-    if(p.mode==='idle'){
-      p.x += p.driftX*DPR + Math.sin(t*0.001+p.phase)*0.05*DPR;
-      p.y += p.driftY*DPR + Math.cos(t*0.001+p.phase)*0.05*DPR;
-      if(pointer.active){
-        const dx = pointer.x*DPR - p.x, dy = pointer.y*DPR - p.y;
-        const dist = Math.hypot(dx,dy)||1;
-        if(dist < 260*DPR){
-          p.x += dx/dist*1.2*DPR;
-          p.y += dy/dist*1.2*DPR;
-        }
-      }
-      if(p.x<-30||p.x>W+30||p.y<-30||p.y>H+30) p.reset();
-    } else if(p.mode==='attract'){
-      const dx = target.x - p.x, dy = target.y - p.y;
-      p.x += dx*0.045*attractStrength;
-      p.y += dy*0.045*attractStrength;
-    } else if(p.mode==='orbit'){
-      p.orbitR = p.orbitR!==undefined ? p.orbitR : (Math.random()*180+60)*DPR;
-      p.orbitA = (p.orbitA!==undefined ? p.orbitA : Math.random()*Math.PI*2) + 0.004 + p.r*0.0004;
-      p.x = target.x + Math.cos(p.orbitA)*p.orbitR;
-      p.y = target.y + Math.sin(p.orbitA)*p.orbitR;
-    }
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.alpha;
-    ctx.shadowBlur = 8*DPR;
-    ctx.shadowColor = p.color;
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-  ctx.shadowBlur = 0;
-  t++;
-  requestAnimationFrame(drawParticles);
-}
-drawParticles();
-
-function setParticleMode(mode){
-  for(const p of particles) p.mode = mode;
-}
-
-/* ================= RING (SVG) ================= */
-const ringSvg = document.getElementById('ring');
-ringSvg.setAttribute('viewBox','0 0 1000 1000');
-const NS = 'http://www.w3.org/2000/svg';
-
-function buildRing(){
-  ringSvg.innerHTML='';
-  const g = document.createElementNS(NS,'g');
-  g.setAttribute('transform','translate(500,500)');
-
-  const grad = document.createElementNS(NS,'linearGradient');
-  grad.setAttribute('id','ringGrad');
-  grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
-  grad.setAttribute('x2','100%'); grad.setAttribute('y2','0%');
-  grad.innerHTML = `<stop offset="0%" stop-color="#4fb6ff"/><stop offset="100%" stop-color="#a855f7"/>`;
-  const defs = document.createElementNS(NS,'defs');
-  defs.appendChild(grad);
-  ringSvg.appendChild(defs);
-
-  const circle = document.createElementNS(NS,'circle');
-  circle.setAttribute('r','300');
-  circle.setAttribute('fill','none');
-  circle.setAttribute('stroke','url(#ringGrad)');
-  circle.setAttribute('stroke-width','2');
-  circle.setAttribute('opacity','0');
-  const circumference = 2*Math.PI*300;
-  circle.setAttribute('stroke-dasharray', circumference);
-  circle.setAttribute('stroke-dashoffset', circumference);
-  circle.id = 'mainRing';
-  g.appendChild(circle);
-
-  for(let i=0;i<3;i++){
-    const node = document.createElementNS(NS,'circle');
-    node.setAttribute('r','6');
-    node.setAttribute('fill', i%2===0 ? '#4fb6ff' : '#a855f7');
-    node.setAttribute('opacity','0');
-    node.classList.add('ringNode');
-    node.dataset.angle = (i*120);
-    g.appendChild(node);
-  }
-
-  ringSvg.appendChild(g);
-}
-buildRing();
-
-function positionRingNodes(radius){
-  document.querySelectorAll('.ringNode').forEach(node=>{
-    const a = (parseFloat(node.dataset.angle) * Math.PI/180);
-    node.setAttribute('cx', Math.cos(a)*radius);
-    node.setAttribute('cy', Math.sin(a)*radius);
-  });
-}
-positionRingNodes(300);
-
-/* ================= SEQUENCE ================= */
-const hint = document.getElementById('hint');
-const brandLine = document.getElementById('brandLine');
-const logoImg = document.getElementById('logoImg');
-const logoWrap = document.getElementById('logoWrap');
-
-let sequenceRunning = false;
-let idleTimer = null;
-
-function showHint(delay=800){
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(()=>{ if(!sequenceRunning) hint.style.opacity=1; }, delay);
-}
-showHint(1200);
-
-function playTone(name, note, time, dur){
-  if(!window.synths || muted) return;
-  try{
-    if(name==='whoosh') window.synths.whoosh.triggerAttackRelease(dur||1, time);
-    else if(name==='thump') window.synths.thump.triggerAttackRelease(note||'C1', dur||0.5, time);
-    else if(name==='chime') window.synths.chime.triggerAttackRelease(note||'C5', dur||1, time);
-    else if(name==='swell') window.synths.swell.triggerAttackRelease(note||['C3','G3','C4'], dur||2, time);
-    else if(name==='tick') window.synths.tick.triggerAttackRelease(note||'C6', dur||0.1, time);
-  }catch(e){}
-}
-
-function runSequence(originX, originY){
-  if(sequenceRunning) return;
-  sequenceRunning = true;
-  hint.style.opacity = 0;
-  initAudio();
-  if(Tone.context.state !== 'running') Tone.start();
-
-  const now = Tone.now();
-  target.x = originX*DPR; target.y = originY*DPR;
-
-  // Phase 1 (0-3s): converge to touch point, then drift to center
-  attractStrength = 1;
-  setParticleMode('attract');
-  playTone('whoosh', null, now, 1.4);
-  playTone('swell', ['C3','G3','C4'], now+0.1, 2.5);
-
-  setTimeout(()=>{
-    target.x = cx(); target.y = cy();
-  }, 1400);
-
-  // Phase 2 (3-6s): draw the ring
-  setTimeout(()=>{
-    const circ = document.getElementById('mainRing');
-    circ.style.transition = 'opacity .4s ease';
-    circ.style.opacity = 1;
-    circ.style.transition += ', stroke-dashoffset 2.4s cubic-bezier(.4,0,.2,1)';
-    requestAnimationFrame(()=> circ.setAttribute('stroke-dashoffset','0'));
-    playTone('whoosh', null, Tone.now(), 1.8);
-
-    document.querySelectorAll('.ringNode').forEach((node,i)=>{
-      setTimeout(()=>{
-        node.style.transition = 'opacity .3s ease';
-        node.style.opacity = 1;
-        playTone('tick', ['E5','G5','B5'][i]||'E5', Tone.now(), 0.15);
-      }, 800*i + 600);
-    });
-  }, 3000);
-
-  // Phase 3 (6-10s): materialize the logo (clip reveal) + switch particles to orbit
-  setTimeout(()=>{
-    setParticleMode('orbit');
-    logoImg.style.transition = 'opacity 1.2s ease, clip-path 3.4s cubic-bezier(.16,1,.3,1), filter 3.4s ease';
-    logoImg.style.opacity = 1;
-    logoImg.style.clipPath = 'circle(75% at 50% 50%)';
-    logoImg.style.filter = 'drop-shadow(0 0 40px rgba(120,170,255,.55)) drop-shadow(0 0 70px rgba(168,85,247,.35))';
-    playTone('thump', 'C1', Tone.now(), 0.6);
-    playTone('swell', ['D3','A3','D4'], Tone.now()+0.2, 3);
-  }, 6000);
-
-  // Phase 4 (10-14s): brand line fades in
-  setTimeout(()=>{
-    brandLine.style.transition = 'opacity 1.4s ease, letter-spacing 1.4s ease';
-    brandLine.style.opacity = 1;
-    playTone('chime', ['C5','E5','G5'], Tone.now(), 1.2);
-  }, 10500);
-
-  // Phase 5 (14-18s): final bloom pulse
-  setTimeout(()=>{
-    logoWrap.animate([
-      { filter:'brightness(1)' },
-      { filter:'brightness(1.6)' },
-      { filter:'brightness(1)' }
-    ], { duration: 1400, easing:'ease-in-out' });
-    playTone('swell', ['C4','G4','C5'], Tone.now(), 2.4);
-    playTone('chime', ['G5','C6'], Tone.now()+0.3, 1.6);
-  }, 14000);
-
-  // Phase 6 (18-27s hold): gentle idle glow, ready
-  setTimeout(()=>{
-    hint.innerHTML = '<span class="dot"></span>TOUCH TO REPLAY<span class="dot"></span>';
-    hint.style.opacity = 0.8;
-  }, 22000);
-
-  // Phase 7 (30s): reset and loop back to idle
-  setTimeout(()=>{
-    resetScene();
-  }, 30000);
-}
-
-function resetScene(){
-  sequenceRunning = false;
-  setParticleMode('idle');
-  for(const p of particles) p.reset();
-
-  const circ = document.getElementById('mainRing');
-  circ.style.transition = 'opacity .8s ease';
-  circ.style.opacity = 0;
-  document.querySelectorAll('.ringNode').forEach(n=> n.style.opacity = 0);
-  setTimeout(()=>{
-    const circumference = 2*Math.PI*300;
-    circ.style.transition = 'none';
-    circ.setAttribute('stroke-dashoffset', circumference);
-  }, 850);
-
-  logoImg.style.transition = 'opacity 1s ease, clip-path 1s ease';
-  logoImg.style.opacity = 0;
-  logoImg.style.clipPath = 'circle(0% at 50% 50%)';
-
-  brandLine.style.transition = 'opacity .8s ease';
-  brandLine.style.opacity = 0;
-
-  hint.innerHTML = '<span class="dot"></span>TOUCH ANYWHERE TO BEGIN<span class="dot"></span>';
-  showHint(1000);
-}
-
-/* ================= INPUT / GESTURES ================= */
-document.getElementById('stage').addEventListener('pointerdown', (e)=>{
-  if(e.target.id === 'muteBtn') return;
-  if(!sequenceRunning){
-    runSequence(e.clientX, e.clientY);
-  } else if(t % 999 === 0) {
-    // no-op placeholder to keep engine warm during sequence taps
-  } else if(Date.now() - (window._lastReplayCheck||0) > 500 && hint.textContent.includes('REPLAY')){
-    resetScene();
-    setTimeout(()=> runSequence(e.clientX, e.clientY), 60);
-  }
-  window._lastReplayCheck = Date.now();
-});
-
-document.addEventListener('pointermove', (e)=>{
-  pointer.x = e.clientX; pointer.y = e.clientY; pointer.active = true;
-  const glow = document.getElementById('cursorGlow');
-  glow.style.left = e.clientX+'px';
-  glow.style.top = e.clientY+'px';
-  glow.style.opacity = 1;
-});
-document.addEventListener('pointerleave', ()=>{ pointer.active = false; });
-</script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
