@@ -2,6 +2,7 @@ const scenes = [...document.querySelectorAll('.scene')];
 const navButtons = [...document.querySelectorAll('.scene-nav button')];
 const progress = document.querySelector('#progressBar');
 const videos = [...document.querySelectorAll('.chapter-video')];
+let experienceSoundEnabled = false;
 
 function setActive(index) {
   scenes.forEach((scene, i) => scene.classList.toggle('active', i === index));
@@ -14,7 +15,13 @@ const observer = new IntersectionObserver((entries) => {
     const index = Number(entry.target.dataset.scene);
     setActive(index);
     const video = entry.target.querySelector('.chapter-video');
-    if (video) video.play().catch(() => {});
+    if (video) {
+      if (experienceSoundEnabled) {
+        videos.forEach(otherVideo => { if (otherVideo !== video) otherVideo.muted = true; });
+        video.muted = false;
+      }
+      video.play().catch(() => {});
+    }
   });
 }, { threshold: .58 });
 scenes.forEach(scene => observer.observe(scene));
@@ -40,6 +47,7 @@ addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX;
 addEventListener('touchend', e => {
   const delta = e.changedTouches[0].clientX - touchStartX;
   if (Math.abs(delta) < 95) return;
+  enableExperienceSound();
   goToRelative(delta < 0 ? 1 : -1);
 }, { passive: true });
 
@@ -48,6 +56,18 @@ function goToRelative(direction) {
   const target = Math.max(0, Math.min(scenes.length - 1, currentScene() + direction));
   scenes[target].scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+function enableExperienceSound() {
+  experienceSoundEnabled = true;
+  const activeScene = scenes[currentScene()];
+  const activeVideo = activeScene?.querySelector('.chapter-video');
+  if (!activeVideo) return;
+  videos.forEach(video => { video.muted = video !== activeVideo; });
+  activeVideo.play().catch(() => {});
+}
+
+// A wheel event may unlock sound in some browsers; touch swipes are the reliable path.
+addEventListener('wheel', enableExperienceSound, { passive: true, once: true });
 
 const voiceTrigger = document.querySelector('#voiceTrigger');
 const voicePanel = document.querySelector('#voicePanel');
