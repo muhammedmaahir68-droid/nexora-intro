@@ -88,6 +88,8 @@ const gesturePanel = document.querySelector('#gesturePanel');
 const camera = document.querySelector('#gestureVideo');
 const canvas = document.querySelector('#gestureCanvas');
 const context = canvas.getContext('2d');
+const gestureState = document.querySelector('#gestureState');
+const gestureText = document.querySelector('#gestureText');
 let stream, handLandmarker, lastX, lastGestureAt = 0, detecting = false;
 
 document.querySelector('#gestureClose').addEventListener('click', stopGestures);
@@ -97,21 +99,37 @@ async function startGestures() {
   if (!navigator.mediaDevices?.getUserMedia) return alert('Camera gestures are not supported in this browser.');
   gestureTrigger.textContent = 'CONNECTING CAMERA…';
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 480, height: 360 }, audio: false });
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 360 } }, audio: false });
+    } catch {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    }
     camera.srcObject = stream;
     await camera.play();
-    const { FilesetResolver, HandLandmarker } = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22');
-    const vision = await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');
+    const version = '0.10.14';
+    const { FilesetResolver, HandLandmarker } = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${version}/vision_bundle.mjs`);
+    const vision = await FilesetResolver.forVisionTasks(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${version}/wasm`);
     handLandmarker = await HandLandmarker.createFromOptions(vision, { baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task' }, runningMode: 'VIDEO', numHands: 1 });
     gesturePanel.classList.add('show');
     gesturePanel.setAttribute('aria-hidden', 'false');
     gestureTrigger.textContent = 'GESTURES ACTIVE';
+    gestureState.textContent = 'GESTURE CONTROL ACTIVE';
+    gestureText.textContent = 'Show an open hand, then swipe left or right to move through the night.';
     detecting = true;
     detectHand();
   } catch (error) {
     console.warn('Gesture controls unavailable:', error);
-    gestureTrigger.textContent = 'GESTURES UNAVAILABLE';
     if (stream) stream.getTracks().forEach(track => track.stop());
+    stream = null;
+    gesturePanel.classList.add('show');
+    gesturePanel.setAttribute('aria-hidden', 'false');
+    gestureState.textContent = 'GESTURES NEED ATTENTION';
+    gestureText.textContent = error?.name === 'NotAllowedError'
+      ? 'Camera permission was blocked. Allow it in the address bar, then retry.'
+      : error?.name === 'NotFoundError'
+        ? 'No usable camera was found. Connect or select a camera, then retry.'
+        : 'Hand tracking could not start. Check your internet connection, then retry.';
+    gestureTrigger.innerHTML = '<span class="hand-mark">✦</span> RETRY GESTURES';
   }
 }
 
@@ -131,6 +149,8 @@ function detectHand() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   const hand = result.landmarks?.[0];
   if (hand) {
+    gestureState.textContent = 'HAND DETECTED';
+    gestureText.textContent = 'Swipe your open hand left or right to navigate.';
     context.fillStyle = '#d9ff3f';
     hand.forEach(point => { context.beginPath(); context.arc(point.x * canvas.width, point.y * canvas.height, 3, 0, Math.PI * 2); context.fill(); });
     const x = hand[9].x;
@@ -140,6 +160,9 @@ function detectHand() {
       if (Math.abs(shift) > .15) { goToRelative(shift > 0 ? -1 : 1); lastGestureAt = now; }
     }
     lastX = x;
+  } else if (gestureState.textContent === 'HAND DETECTED') {
+    gestureState.textContent = 'WAITING FOR HAND';
+    gestureText.textContent = 'Keep one open hand in the camera frame.';
   }
   requestAnimationFrame(detectHand);
 }
