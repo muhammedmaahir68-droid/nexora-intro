@@ -1,7 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 
 const scenes = [...document.querySelectorAll('.scene')];
-const navButtons = [...document.querySelectorAll('.scene-nav button')];
 const progress = document.querySelector('#progressBar');
 const videos = [...document.querySelectorAll('.chapter-video')];
 let experienceSoundEnabled = false;
@@ -9,7 +8,6 @@ let audioContext, ambienceGain, ambienceOscillator;
 
 function setActive(index) {
   scenes.forEach((scene, i) => scene.classList.toggle('active', i === index));
-  navButtons.forEach((button, i) => button.classList.toggle('is-current', i === index));
   updateAmbience(index);
 }
 
@@ -44,10 +42,6 @@ addEventListener('scroll', () => {
     if (copy) copy.style.transform = `translateY(${offset * -28}px)`;
   });
 }, { passive: true });
-
-navButtons.forEach((button, index) => button.addEventListener('click', () => {
-  scenes[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
-}));
 
 document.querySelectorAll('.sound-toggle').forEach((button) => button.addEventListener('click', () => {
   const video = button.closest('.chapter-video-wrap').querySelector('video');
