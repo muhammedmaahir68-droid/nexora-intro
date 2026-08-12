@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080608">
+  <meta name="description" content="NEXORA Club Inauguration — an immersive scroll experience.">
+  <title>NEXORA — Club Inauguration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <header class="nav">
+    <a class="wordmark" href="#home" aria-label="Nexora home">NEXORA<span>°</span></a>
+    <p>THE CLUB / 2026</p>
+    <div class="nav-controls">
+      <button class="voice-trigger" id="voiceTrigger"><span>●</span> VOICE MEMO</button>
+      <button class="gesture-trigger" id="gestureTrigger"><span class="hand-mark">✦</span> ENABLE GESTURES</button>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero scene active" data-scene="0">
+      <div class="hero-copy reveal">
+        <p class="kicker">ONE NIGHT ONLY · THE OFFICIAL OPENING</p>
+        <h1>Enter the<br><em>unseen.</em></h1>
+        <p class="intro">A new after-dark chapter begins. Move through the night, one feeling at a time.</p>
+        <a href="#chapter-one" class="enter-link">Begin the experience <i>↓</i></a>
+      </div>
+      <div class="hero-logo reveal">
+        <div class="logo-frame">
+          <img src="./nexora-logo.jpg" alt="Nexora logo">
+        </div>
+        <span>THE MARK OF THE NIGHT</span>
+      </div>
+      <div class="hero-index">01 <span>/ 04</span></div>
+      <p class="scroll-note">SCROLL TO UNFOLD <span></span></p>
+    </section>
+
+    <section class="chapter scene" id="chapter-one" data-scene="1">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-arrival.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 01 / ARRIVAL</p>
+        <h2>The doors<br>are <em>open.</em></h2>
+        <p>Follow the pulse. Leave the ordinary at the threshold.</p>
+      </div>
+      <p class="chapter-number">01</p>
+    </section>
+
+    <section class="chapter chapter-reverse scene" id="chapter-two" data-scene="2">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-energy.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 02 / IGNITION</p>
+        <h2>Let the<br>room <em>move you.</em></h2>
+        <p>Lights lower. Energy rises. This is where the story turns electric.</p>
+      </div>
+      <p class="chapter-number">02</p>
+    </section>
+
+    <section class="chapter scene" id="chapter-three" data-scene="3">
+      <div class="chapter-video-wrap">
+        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
+          <source src="./club-final.mp4" type="video/mp4">
+        </video>
+        <div class="video-shade"></div>
+        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
+      </div>
+      <div class="chapter-copy reveal">
+        <p class="kicker">CHAPTER 03 / THE MOMENT</p>
+        <h2>This is<br>the <em>beginning.</em></h2>
+        <p>Not just a launch. A new place to return to, long after tonight.</p>
+      </div>
+      <p class="chapter-number">03</p>
+    </section>
+
+    <section class="closing scene" id="rsvp" data-scene="4">
+      <p class="kicker reveal">NEXORA CLUB INAUGURATION</p>
+      <h2 class="reveal">See you<br>on the <em>inside.</em></h2>
+      <div class="event-details reveal">
+        <p><b>THE OPENING NIGHT</b><br>AN INVITATION TO BEGIN</p>
+        <a href="mailto:hello@nexora.club?subject=Nexora%20Club%20Inauguration">REQUEST YOUR INVITATION <i>↗</i></a>
+      </div>
+      <p class="closing-mark">NEXORA<span>°</span></p>
+    </section>
+  </main>
+
+  <div class="scene-nav" aria-label="Experience navigation">
+    <button class="is-current" data-go="0" aria-label="Opening"></button>
+    <button data-go="1" aria-label="Arrival"></button>
+    <button data-go="2" aria-label="Ignition"></button>
+    <button data-go="3" aria-label="The moment"></button>
+    <button data-go="4" aria-label="Invitation"></button>
+  </div>
+
+  <div class="gesture-panel" id="gesturePanel" aria-hidden="true">
+    <div class="camera-box"><video id="gestureVideo" playsinline muted></video><canvas id="gestureCanvas"></canvas></div>
+    <div><b>GESTURE CONTROL ACTIVE</b><p>Swipe your open hand left or right to move through the night.</p></div>
+    <button id="gestureClose" aria-label="Close gesture controls">×</button>
+  </div>
+  <div class="voice-panel" id="voicePanel" role="status" aria-live="polite">
+    <span class="voice-wave"><i></i><i></i><i></i><i></i><i></i></span>
+    <div><b id="voiceState">VOICE COMMAND READY</b><p id="voiceText">Say “next”, “back”, “start”, or “invitation”.</p></div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
