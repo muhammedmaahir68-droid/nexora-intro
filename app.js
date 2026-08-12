@@ -1,12 +1,16 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+
 const scenes = [...document.querySelectorAll('.scene')];
 const navButtons = [...document.querySelectorAll('.scene-nav button')];
 const progress = document.querySelector('#progressBar');
 const videos = [...document.querySelectorAll('.chapter-video')];
 let experienceSoundEnabled = false;
+let audioContext, ambienceGain, ambienceOscillator;
 
 function setActive(index) {
   scenes.forEach((scene, i) => scene.classList.toggle('active', i === index));
   navButtons.forEach((button, i) => button.classList.toggle('is-current', i === index));
+  updateAmbience(index);
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -28,7 +32,17 @@ scenes.forEach(scene => observer.observe(scene));
 
 addEventListener('scroll', () => {
   const max = document.documentElement.scrollHeight - innerHeight;
-  progress.style.width = `${max ? (scrollY / max) * 100 : 0}%`;
+  const scrollProgress = max ? scrollY / max : 0;
+  progress.style.width = `${scrollProgress * 100}%`;
+  document.documentElement.style.setProperty('--scroll-progress', scrollProgress);
+  scenes.forEach(scene => {
+    const rect = scene.getBoundingClientRect();
+    const offset = (rect.top + rect.height / 2 - innerHeight / 2) / innerHeight;
+    const video = scene.querySelector('.chapter-video');
+    const copy = scene.querySelector('.chapter-copy');
+    if (video) video.style.transform = `scale(${1.05 + Math.min(.06, Math.abs(offset) * .04)}) translateY(${offset * -5}%)`;
+    if (copy) copy.style.transform = `translateY(${offset * -28}px)`;
+  });
 }, { passive: true });
 
 navButtons.forEach((button, index) => button.addEventListener('click', () => {
@@ -64,10 +78,64 @@ function enableExperienceSound() {
   if (!activeVideo) return;
   videos.forEach(video => { video.muted = video !== activeVideo; });
   activeVideo.play().catch(() => {});
+  startAmbience();
 }
 
 // A wheel event may unlock sound in some browsers; touch swipes are the reliable path.
 addEventListener('wheel', enableExperienceSound, { passive: true, once: true });
+
+function startAmbience() {
+  if (audioContext) {
+    audioContext.resume();
+    return;
+  }
+  audioContext = new AudioContext();
+  ambienceGain = audioContext.createGain();
+  ambienceGain.gain.value = .018;
+  const filter = audioContext.createBiquadFilter();
+  filter.type = 'lowpass'; filter.frequency.value = 140;
+  ambienceOscillator = audioContext.createOscillator();
+  ambienceOscillator.type = 'sine';
+  ambienceOscillator.frequency.value = 48;
+  ambienceOscillator.connect(filter).connect(ambienceGain).connect(audioContext.destination);
+  ambienceOscillator.start();
+  updateAmbience(currentScene());
+}
+
+function updateAmbience(index) {
+  if (!ambienceOscillator || !audioContext) return;
+  const notes = [42, 48, 56, 64, 72];
+  ambienceOscillator.frequency.exponentialRampToValueAtTime(notes[index] || 48, audioContext.currentTime + .45);
+}
+
+const stage = document.querySelector('#threeStage');
+const renderer = new THREE.WebGLRenderer({ canvas: stage, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+const threeScene = new THREE.Scene();
+const threeCamera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, .1, 100);
+threeCamera.position.z = 7;
+const particleCount = innerWidth < 700 ? 260 : 720;
+const positions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  positions[i * 3] = (Math.random() - .5) * 16;
+  positions[i * 3 + 1] = (Math.random() - .5) * 11;
+  positions[i * 3 + 2] = (Math.random() - .5) * 6;
+}
+const particlesGeometry = new THREE.BufferGeometry();
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const particles = new THREE.Points(particlesGeometry, new THREE.PointsMaterial({ color: 0xd9ff3f, size: .025, transparent: true, opacity: .85 }));
+threeScene.add(particles);
+function resizeThree() { renderer.setSize(innerWidth, innerHeight, false); threeCamera.aspect = innerWidth / innerHeight; threeCamera.updateProjectionMatrix(); }
+addEventListener('resize', resizeThree); resizeThree();
+function animateThree(time) {
+  const travel = Number(getComputedStyle(document.documentElement).getPropertyValue('--scroll-progress')) || 0;
+  particles.rotation.y = time * .00005 + travel * Math.PI * 3;
+  particles.rotation.x = Math.sin(time * .0001) * .15 + travel * .7;
+  particles.position.y = Math.sin(time * .0002) * .3 - travel * 1.2;
+  renderer.render(threeScene, threeCamera);
+  requestAnimationFrame(animateThree);
+}
+requestAnimationFrame(animateThree);
 
 const voiceTrigger = document.querySelector('#voiceTrigger');
 const voicePanel = document.querySelector('#voicePanel');
