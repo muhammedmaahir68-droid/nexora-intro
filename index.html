@@ -13,13 +13,20 @@
 </head>
 <body>
   <canvas class="three-stage" id="threeStage" aria-hidden="true"></canvas>
+  <div class="cinematic-stage" aria-hidden="true">
+    <video class="cinematic-video arrival-video" muted playsinline preload="metadata" poster="./nexora-logo.jpg"><source src="./club-arrival.mp4" type="video/mp4"></video>
+    <video class="cinematic-video ignition-video" muted playsinline preload="metadata" poster="./nexora-logo.jpg"><source src="./club-energy.mp4" type="video/mp4"></video>
+    <video class="cinematic-video moment-video" muted playsinline preload="metadata" poster="./nexora-logo.jpg"><source src="./club-final.mp4" type="video/mp4"></video>
+    <div class="cinematic-wash"></div>
+  </div>
   <div class="grain" aria-hidden="true"></div>
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
   <header class="nav">
     <a class="wordmark" href="#home" aria-label="Nexora home">NEXORA<span>°</span></a>
-    <p>THE CLUB / 2026</p>
+    <p id="modeStatus">THE CLUB / 2026</p>
     <div class="nav-controls">
+      <button class="ceremony-trigger" id="ceremonyTrigger">CEREMONY</button>
       <button class="voice-trigger" id="voiceTrigger"><span>●</span> VOICE MEMO</button>
       <button class="gesture-trigger" id="gestureTrigger"><span class="hand-mark">✦</span> ENABLE GESTURES</button>
     </div>
@@ -42,13 +49,6 @@
     </section>
 
     <section class="chapter scene" id="chapter-one" data-scene="1">
-      <div class="chapter-video-wrap">
-        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
-          <source src="./club-arrival.mp4" type="video/mp4">
-        </video>
-        <div class="video-shade"></div>
-        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
-      </div>
       <div class="chapter-copy reveal">
         <p class="kicker">CHAPTER 01 / ARRIVAL</p>
         <h2>The doors<br>are <em>open.</em></h2>
@@ -57,13 +57,6 @@
     </section>
 
     <section class="chapter chapter-reverse scene" id="chapter-two" data-scene="2">
-      <div class="chapter-video-wrap">
-        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
-          <source src="./club-energy.mp4" type="video/mp4">
-        </video>
-        <div class="video-shade"></div>
-        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
-      </div>
       <div class="chapter-copy reveal">
         <p class="kicker">CHAPTER 02 / IGNITION</p>
         <h2>Let the<br>room <em>move you.</em></h2>
@@ -72,13 +65,6 @@
     </section>
 
     <section class="chapter scene" id="chapter-three" data-scene="3">
-      <div class="chapter-video-wrap">
-        <video class="chapter-video" muted loop playsinline preload="metadata" poster="./nexora-logo.jpg">
-          <source src="./club-final.mp4" type="video/mp4">
-        </video>
-        <div class="video-shade"></div>
-        <button class="sound-toggle" aria-label="Toggle video sound">SOUND <span>OFF</span></button>
-      </div>
       <div class="chapter-copy reveal">
         <p class="kicker">CHAPTER 03 / THE MOMENT</p>
         <h2>This is<br>the <em>beginning.</em></h2>
