@@ -26,6 +26,7 @@ function scrollProgress() {
 function setTimeline(progress, { syncScroll = true } = {}) {
   ceremonyActive = false;
   targetProgress = clamp(progress);
+  videos.forEach((video, index) => scrubVideo(video, sceneLocalProgress(targetProgress, index)));
   if (!syncScroll) return;
   const max = document.documentElement.scrollHeight - innerHeight;
   scrollTo({ top: targetProgress * max, behavior: 'smooth' });
@@ -77,7 +78,8 @@ function updateVideos(progress) {
     const scale = index === 0 ? 1.2 + local * .08 : 1.04 + local * .08;
     video.style.opacity = weight.toFixed(3);
     video.style.transform = `scale(${scale}) translate3d(${pointerX * (index + 1) * 1.4}%, ${pointerY * (index + 1)}%, 0)`;
-    scrubVideo(video, local);
+    // Keep each layer alive as a real video; only timeline jumps need a seek.
+    video.play().catch(() => {});
   });
 }
 
@@ -113,6 +115,9 @@ function renderTimeline(progress) {
 
 function enableExperienceSound() {
   experienceSoundEnabled = true;
+  const activeIndex = sceneWeights(smoothProgress).indexOf(Math.max(...sceneWeights(smoothProgress)));
+  videos.forEach((video, index) => { video.muted = index !== activeIndex; });
+  videos[activeIndex]?.play().catch(() => {});
   if (audioContext) {
     audioContext.resume();
     return;
